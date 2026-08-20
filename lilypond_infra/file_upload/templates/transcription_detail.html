@@ -1,0 +1,42 @@
+<h1>{{ transcription.title }}</h1>
+{% if revisions %}
+<p>View latest: <a href="{% url 'revision_download_pdf' transcription.id revisions.last.index %}">.pdf</a>, <a href="{% url 'revision_download_ly' transcription.id revisions.last.index %}">.ly</a></p>
+{% else %}
+    <p>No revisions available. Is anyone working on this?</p>
+{% endif %}
+{% if user.is_staff %}
+    <p><a href="{% url 'admin:file_upload_transcription_change' transcription.id %}">Edit in admin</a></p>
+{% endif %}
+
+{% if books|length == 1 %}
+    <p>From book <a href="{% url 'book_detail' books.first.id %}">{{ books.first.title }}</a></p>
+{% else %}
+    <h3>Included in books</h3>
+    <ul>
+        {% for book in books %}
+            <li><a href="{% url 'book_detail' book.id %}">{{ book.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if can_upload_revisions %}
+    <h2>Upload new revision</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Upload</button>
+    </form>
+{% endif %}
+
+<h2>Revision History</h2>
+<ol reversed>
+  {% for revision in revisions %}
+    <li>
+      {{ revision.created_at|date:"Y-m-d H:i" }} by {{ revision.creator }}
+      &mdash;
+        <a href="{% url 'revision_download_pdf' transcription.id revisions.last.index %}">view .pdf</a> / <a href="{% url 'revision_download_ly' transcription.id revision.index %}">view .ly</a>
+    </li>
+  {% empty %}
+    <li>No revisions yet.</li>
+  {% endfor %}
+</ol>

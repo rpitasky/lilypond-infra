@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+
+{% block object-tools %}
+  {% if request.resolver_match.url_name == "index" %}
+    <ul class="object-tools">
+      <li>
+        <form method="post" action="{% url 'trigger_git_pull' %}" style="display:inline">
+          {% csrf_token %}
+          <button type="submit" class="button">Pull Latest Templates</button>
+        </form>
+      </li>
+    </ul>
+  {% else %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}

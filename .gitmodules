@@ -1,0 +1,3 @@
+[submodule "lilypond_render/raw-template"]
+	path = lilypond_render/raw-template
+	url = https://github.com/rpitasky/raw-template.git

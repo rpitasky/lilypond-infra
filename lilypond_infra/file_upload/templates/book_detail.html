@@ -1,0 +1,21 @@
+<h1>{{ book.title }}</h1>
+{% if user.is_staff %}
+    <p><a href="{% url 'admin:file_upload_book_change' book.id %}">Edit in admin</a></p>
+{% endif %}
+
+<p>
+  Download latest revisions: <a href="{% url 'book_download_pdf_zip' book.id %}">PDF</a>, <a href="{% url 'book_download_ly_zip' book.id %}">LilyPond</a>
+</p>
+
+<h2>Transcriptions</h2>
+<ul>
+  {% for transcription in transcriptions %}
+    <li>
+      <a href="{% url 'transcription_detail' transcription.id %}">
+        {{ transcription.title }}
+      </a>
+    </li>
+  {% empty %}
+    <li>No transcriptions yet.</li>
+  {% endfor %}
+</ul>

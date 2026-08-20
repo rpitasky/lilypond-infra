@@ -1,0 +1,12 @@
+{% extends "account/base_entrance.html" %}
+{% load socialaccount %}
+{% load allauth %}
+
+{% block content %}
+  <h1>Sign in</h1>
+
+  <form method="post" action="{% provider_login_url 'discord' process='login' %}">
+    {% csrf_token %}
+    <button type="submit">Continue with Discord</button>
+  </form>
+{% endblock %}

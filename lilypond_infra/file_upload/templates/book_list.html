@@ -1,0 +1,13 @@
+<h1>Books</h1>
+<ul>
+  {% for book in books %}
+    <li>
+      <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
+    </li>
+  {% empty %}
+    <li>No books yet.</li>
+  {% endfor %}
+{% if user.is_staff %}
+    <li><a href="{% url 'admin:file_upload_book_add' %}">Add another in admin</a></li>
+{% endif %}
+</ul>

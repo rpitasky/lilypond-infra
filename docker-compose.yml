@@ -1,0 +1,61 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: bot/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./bot:/app/bot
+    ports:
+      - "127.0.0.1:8001:8001"
+    networks:
+      - lilypond_net
+
+  lilypond_render:
+    build:
+      context: .
+      dockerfile: lilypond_render/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - GIT_SSH_COMMAND=ssh -i /root/.ssh/id_ed25519 -o UserKnownHostsFile=/root/.ssh/known_hosts
+    volumes:
+      - ./lilypond_render:/app/lilypond_render
+      - render_tmp:/tmp/lilypond-jobs
+      - ~/.ssh/id_ed25519:/root/.ssh/id_ed25519:ro
+      - /usr/local/lilypond:/usr/local/lilypond:ro
+    ports:
+      - "127.0.0.1:8002:8002"
+    networks:
+      - lilypond_net
+
+  django:
+    build:
+      context: .
+      dockerfile: lilypond_infra/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - BOT_SERVICE_URL=http://bot:8001
+      - RENDER_SERVICE_URL=http://lilypond_render:8002
+    volumes:
+      - ./lilypond_infra:/app/lilypond_infra
+      - ~/lilypond-infra/lilypond_infra/db.sqlite3:/app/lilypond_infra/db.sqlite3
+      - ~/lilypond-infra/lilypond_infra/media:/app/lilypond_infra/media
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      - bot
+      - lilypond_render
+    networks:
+      - lilypond_net
+
+volumes:
+  render_tmp:
+
+networks:
+  lilypond_net:

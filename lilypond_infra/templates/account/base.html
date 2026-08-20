@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block head_title %}Welcome{% endblock %}</title>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <main style="text-align: center; margin-top: 100px;">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% block extra_body %}{% endblock %}
+</body>
+</html>
