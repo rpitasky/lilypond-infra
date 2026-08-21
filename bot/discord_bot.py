@@ -1,9 +1,11 @@
+import os
+
 import discord
 import asyncio
 import uvicorn
 from fastapi import FastAPI
-import discord_settings
 
+DISCORD_SERVER_ID = 1370472564433883146
 
 intents = discord.Intents.default()
 intents.members = True
@@ -19,7 +21,7 @@ async def on_ready():
 
 @api.get('/member/{user_id}/has-role/{role_id}')
 async def has_role(user_id: int, role_id: int):
-    guild = bot.get_guild(discord_settings.DISCORD_SERVER_ID)
+    guild = bot.get_guild(DISCORD_SERVER_ID)
     if not guild:
         return {'error': 'Guild not found'}
 
@@ -42,7 +44,7 @@ async def start_api():
 
 async def main():
     await asyncio.gather(
-        bot.start(discord_settings.DISCORD_BOT_TOKEN),
+        bot.start(os.environ.get("DISCORD_BOT_TOKEN")),
         start_api(),
     )
 
