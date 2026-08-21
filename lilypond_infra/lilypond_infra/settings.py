@@ -27,7 +27,7 @@ DEBUG = "runserver" in sys.argv
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") if not DEBUG else "django-insecure-k^!a0b+mqr1e7nb=lqo8c*rcw9j2ka8#a*_vg-xr+3dwps0q*2"
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["lilypond.rpitasky.xyz"] if not DEBUG else []
 
 
 # Application definition
