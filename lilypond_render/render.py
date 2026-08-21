@@ -86,6 +86,7 @@ async def render(
     options: str = Form(""),
     timeout: int = Form(30),
 ):
+    print(f"rendering {file.filename} with tag {tag} and options {options}")
     job_id = uuid.uuid4().hex
     timeout = min(max(int(timeout), 1), MAX_TIMEOUT)
 
