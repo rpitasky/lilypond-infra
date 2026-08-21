@@ -20,6 +20,7 @@ class Book(models.Model):
     transcriptions = models.ManyToManyField(
         "Transcription",
         related_name="books",
+        blank=True,
     )
 
     def __str__(self):
