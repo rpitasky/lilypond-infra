@@ -22,7 +22,7 @@ RUN uv sync --frozen --no-install-project
 COPY . .
 RUN uv sync --frozen
 
-ENV PATH="/app/.venv/bin:/usr/local/lilypond/bin:${PATH}"
+ENV PATH="/app/.venv/bin:/usr/local/bin:${PATH}"
 
 RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
 RUN ssh-keyscan github.com gitlab.com >> /root/.ssh/known_hosts 2>/dev/null || true

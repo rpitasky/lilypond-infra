@@ -21,12 +21,12 @@ services:
     env_file:
       - .env
     environment:
-      - GIT_SSH_COMMAND=ssh -i /root/.ssh/id_ed25519 -o UserKnownHostsFile=/root/.ssh/known_hosts
+      - GIT_SSH_COMMAND=ssh -i /root/.ssh/lilypond_render_deploy -o UserKnownHostsFile=/root/.ssh/known_hosts
     volumes:
       - ./lilypond_render:/app/lilypond_render
       - render_tmp:/tmp/lilypond-jobs
-      - ~/.ssh/id_ed25519:/root/.ssh/id_ed25519:ro
-      - /usr/local/lilypond:/usr/local/lilypond:ro
+      - ~/.ssh/lilypond_render_deploy:/root/.ssh/lilypond_render_deploy:ro
+      - /usr/local/bin/lilypond:/usr/local/bin/lilypond:ro
     ports:
       - "127.0.0.1:8002:8002"
     networks:
