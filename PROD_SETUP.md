@@ -19,3 +19,6 @@
    (on arm (raspberry pi)) -> build from source
 4. Generate ssh key and add to github
    `ssh-keygen -t ed25519 -f ~/.ssh/lilypond_render_deploy -N "" -C "lilypond_render deploy key"` `chmod 600 ~/.ssh/lilypond_render_deploy`
+5. touch the db
+6. run docker-compose to build/start containers
+7. follow your nose
