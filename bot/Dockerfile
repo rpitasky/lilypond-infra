@@ -18,4 +18,4 @@ ENV PATH="/app/.venv/bin:${PATH}"
 
 WORKDIR /app/bot
 
-CMD ["uv", "run", "python", "discord_bot.py"]
+CMD ["uv", "run", "python", "discord_bot.py", "--docker"]

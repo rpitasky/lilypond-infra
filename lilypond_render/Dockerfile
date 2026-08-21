@@ -29,4 +29,4 @@ RUN ssh-keyscan github.com gitlab.com >> /root/.ssh/known_hosts 2>/dev/null || t
 
 WORKDIR /app/lilypond_render
 
-CMD ["uv", "run", "python", "render.py"]
+CMD ["uv", "run", "python", "render.py", "--docker"]

@@ -22,12 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = "runserver" in sys.argv
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") if not DEBUG else "django-insecure-k^!a0b+mqr1e7nb=lqo8c*rcw9j2ka8#a*_vg-xr+3dwps0q*2"
 
-ALLOWED_HOSTS = ["lilypond.rpitasky.xyz"]# if not DEBUG else []
-CSRF_TRUSTED_ORIGINS = ["https://lilypond.rpitasky.xyz"]# if not DEBUG else []
+ALLOWED_HOSTS = ["lilypond.rpitasky.xyz"] if not DEBUG else ["127.0.0.1", "localhost"]
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = ["https://lilypond.rpitasky.xyz"]
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True

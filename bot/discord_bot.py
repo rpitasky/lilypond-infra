@@ -1,4 +1,5 @@
 import os
+import sys
 
 import discord
 import asyncio
@@ -13,6 +14,7 @@ intents.members = True
 bot = discord.Client(intents=intents)
 api = FastAPI()
 
+HOST = "0.0.0.0" if "--docker" in sys.argv else "127.0.0.1"
 
 @bot.event
 async def on_ready():
@@ -37,7 +39,7 @@ async def has_role(user_id: int, role_id: int):
 
 
 async def start_api():
-    config = uvicorn.Config(api, host='127.0.0.1', port=8001, log_level='error')
+    config = uvicorn.Config(api, host=HOST, port=8001, log_level='error')
     server = uvicorn.Server(config)
     print('Starting API server on port 8001')
     await server.serve()

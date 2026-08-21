@@ -11,6 +11,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 import uuid
 import warnings
@@ -21,6 +22,8 @@ import uvicorn
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
+
+HOST = "0.0.0.0" if "--docker" in sys.argv else "127.0.0.1"
 
 api = FastAPI(title="LilyPond Render Service")
 SCRIPT_DIR = Path(__file__).parent
@@ -225,7 +228,7 @@ async def lilypond_sandboxed(input_path: Path, template_dir: Path, out_dir: Path
         raise HTTPException(422, err)
 
 async def start_api():
-    config = uvicorn.Config(api, host='127.0.0.1', port=8002, log_level='error')
+    config = uvicorn.Config(api, host=HOST, port=8002, log_level='error')
     server = uvicorn.Server(config)
     print('Starting API server on port 8002')
     await server.serve()
