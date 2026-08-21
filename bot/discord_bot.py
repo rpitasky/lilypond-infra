@@ -21,6 +21,7 @@ async def on_ready():
 
 @api.get('/member/{user_id}/has-role/{role_id}')
 async def has_role(user_id: int, role_id: int):
+    print(f"Checking if user {user_id} has role {role_id}")
     guild = bot.get_guild(DISCORD_SERVER_ID)
     if not guild:
         return {'error': 'Guild not found'}

@@ -13,7 +13,7 @@ def user_has_role(user, role_id):
     try:
         discord_account = user.socialaccount_set.get(provider="discord")
         user_id = int(discord_account.uid)
-
+        print(BOT_API)
         response = requests.get(f"{BOT_API}/member/{user_id}/has-role/{role_id}")
         data = response.json()
 

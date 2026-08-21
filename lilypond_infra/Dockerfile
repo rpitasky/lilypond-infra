@@ -19,4 +19,6 @@ ENV PATH="/app/.venv/bin:${PATH}"
 
 WORKDIR /app/lilypond_infra
 
+RUN uv run python manage.py collectstatic --noinput
+
 CMD ["uv", "run", "gunicorn", "lilypond_infra.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

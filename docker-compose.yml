@@ -43,7 +43,6 @@ services:
       - BOT_SERVICE_URL=http://bot:8001
       - RENDER_SERVICE_URL=http://lilypond_render:8002
     volumes:
-      - ./lilypond_infra:/app/lilypond_infra
       - ~/lilypond-infra/lilypond_infra/db.sqlite3:/app/lilypond_infra/db.sqlite3
       - ~/lilypond-infra/lilypond_infra/media:/app/lilypond_infra/media
     ports:
