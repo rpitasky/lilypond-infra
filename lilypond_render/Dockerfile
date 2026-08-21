@@ -9,7 +9,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     openssh-client \
     build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+
+# 1. Install official LilyPond to auto-resolve all runtime dependencies
+# 2. Purge only the official package binary, keeping all shared libraries
+RUN apt-get update && \ apt-get install -y --no-install-recommends lilypond && \
+    dpkg --purge --force-depends lilypond && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* \
+
+RUN mkdir -p /usr/local/share/fonts/custom-fonts/
+COPY ./lilypond_render/fonts/* /usr/local/share/fonts/custom-fonts/
+RUN fc-cache -fv
 
 RUN git config --global --add safe.directory /app/lilypond_render/raw-template
 
