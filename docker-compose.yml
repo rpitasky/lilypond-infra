@@ -22,12 +22,13 @@ services:
       - .env
     environment:
       - GIT_SSH_COMMAND=ssh -i /root/.ssh/lilypond_render_deploy -o UserKnownHostsFile=/root/.ssh/known_hosts
+      - LILYPOND_PATH=/opt/lilypond-2.26.0/bin/lilypond
     volumes:
       - ./lilypond_render:/app/lilypond_render
       - render_tmp:/tmp/lilypond-jobs
       - ~/.ssh/lilypond_render_deploy:/root/.ssh/lilypond_render_deploy:ro
-      - /usr/local/bin/lilypond:/usr/local/bin/lilypond:ro
       - /usr/local/share/lilypond/:/usr/local/share/lilypond/:ro
+      - /opt/lilypond-2.26.0:/opt/lilypond-2.26.0:ro
     ports:
       - "127.0.0.1:8002:8002"
     networks:
