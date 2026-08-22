@@ -34,7 +34,7 @@
     <li>
       {{ revision.created_at|date:"Y-m-d H:i" }} by {{ revision.creator }}
       &mdash;
-        <a href="{% url 'revision_download_pdf' transcription.id revisions.last.index %}">view .pdf</a> / <a href="{% url 'revision_download_ly' transcription.id revision.index %}">view .ly</a>
+        <a href="{% url 'revision_download_pdf' transcription.id revision.index %}">view .pdf</a> / <a href="{% url 'revision_download_ly' transcription.id revision.index %}">view .ly</a>
     </li>
   {% empty %}
     <li>No revisions yet.</li>

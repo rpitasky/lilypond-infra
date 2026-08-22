@@ -68,10 +68,10 @@ class BookContentsOrderInline(SortableInlineAdminMixin, admin.TabularInline):
     verbose_name_plural = "Reorder transcriptions"
 
     def has_add_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
 
     class Media:
         css = {"all": ("admin/css/sortable-tabular-inline-fixes.css",)}
@@ -110,8 +110,10 @@ class BookAdmin(SortableAdminBase, admin.ModelAdmin):
 class RevisionInline(admin.TabularInline):
     model = Revision
 
-    extra = 1
     autocomplete_fields = ("creator",)
+
+    def has_add_permission(self, request, obj=None):
+        return request.user.is_superuser
 
 
 @admin.action(description="Rerender Latest PDFs")
