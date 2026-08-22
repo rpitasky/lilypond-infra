@@ -1,13 +1,25 @@
-<h1>Books</h1>
-<ul>
-  {% for book in books %}
-    <li>
-      <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
-    </li>
-  {% empty %}
-    <li>No books yet.</li>
-  {% endfor %}
-{% if user.is_staff %}
-    <li><a href="{% url 'admin:file_upload_book_add' %}">Add another in admin</a></li>
-{% endif %}
-</ul>
+{% extends "base.html" %}
+{% block title %} Books | Lilypond Infra {% endblock %}
+
+{% block content %}
+<article>
+  <header>
+    <h1>Books</h1>
+      {% if user.is_staff %}
+        <span class="admin-edit"><a href="{% url 'admin:file_upload_book_add' %}"><img src="/static/admin/img/icon-addlink.svg" alt="" width="24" height="24"></a></span>
+      {% endif %}
+  </header>
+
+  <section>
+    <ul>
+      {% for book in books %}
+        <li>
+          <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
+        </li>
+      {% empty %}
+        <li>No books yet.</li>
+      {% endfor %}
+    </ul>
+  </section>
+</article>
+{% endblock %}

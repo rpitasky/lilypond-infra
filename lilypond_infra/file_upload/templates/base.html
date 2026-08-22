@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <title>{% block title %}{% endblock %}</title>
+
+    <style>
+        html { font-size: 10pt; }
+
+        address { display: inline; }
+        p { margin: 1.15rem 0 !important; }
+
+        section {
+            padding: 1.5rem 0;
+            margin: 1.5rem 0;
+        }
+    {% if user.is_staff %}
+        .admin-edit {
+            position: fixed;
+            top: 1em;
+            right: 1em;
+
+            font-size: 150%;
+        }
+
+        .admin-edit:hover { transform: scale(1.2); }
+
+        .admin-edit a { text-decoration: none; }
+    {% endif %}
+    </style>
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

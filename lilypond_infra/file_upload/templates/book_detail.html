@@ -1,19 +1,34 @@
-<h1>{{ book.title }}</h1>
-{% if user.is_staff %}
-    <p><a href="{% url 'admin:file_upload_book_change' book.id %}">Edit in admin</a></p>
-{% endif %}
+{% extends "base.html" %}
+{% block title %} {{ book.title }} | Lilypond Infra {% endblock %}
 
-<p>
-  Download latest revisions: <a href="{% url 'book_download_pdf_zip' book.id %}">PDF</a>, <a href="{% url 'book_download_ly_zip' book.id %}">LilyPond</a>
-</p>
+{% block content %}
+<article>
+  <header>
+      <h1>{{ book.title }}</h1>
 
-<h2>Transcriptions</h2>
-<ol>
-  {% for content in contents %}
-    <li>
-      <a href="{% url 'transcription_detail' content.transcription.id %}">{{ content.transcription.title }}</a> {% if content.revision %} (pinned to revision {{ content.revision_id }}){% endif %}
-    </li>
-  {% empty %}
-    <li>No transcriptions yet.</li>
-  {% endfor %}
-</ol>
+    {% if user.is_staff %}
+        <span class="admin-edit" title="Edit in admin"><a href="{% url 'admin:file_upload_book_change' book.id %}">⚙️</a></span>
+    {% endif %}
+
+      <p>
+        Download latest revisions:
+        <a href="{% url 'book_download_pdf_zip' book.id %}">PDF</a>,
+        <a href="{% url 'book_download_ly_zip' book.id %}">LilyPond</a>
+      </p>
+  </header>
+
+  <section>
+    <h2>Transcriptions</h2>
+    <ol>
+      {% for content in contents %}
+        <li>
+          <a href="{% url 'transcription_detail' content.transcription.id %}">{{ content.transcription.title }}</a>
+          {% if content.revision %} (pinned to revision {{ content.revision_id }}){% endif %}
+        </li>
+      {% empty %}
+        <li>No transcriptions yet.</li>
+      {% endfor %}
+    </ol>
+  </section>
+</article>
+{% endblock %}

@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Prefetch
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.text import slugify
 
 from extern.discord_bot import discord_role_required, user_has_role
 import discord_settings
@@ -79,7 +80,7 @@ def _book_download_zip(request, book_id, file_field, extension):
     buffer.seek(0)
     response = HttpResponse(buffer.getvalue(), content_type="application/zip")
     response["Content-Disposition"] = (
-        f'attachment; filename="{book.id}-{extension}-{checksum}.zip"'
+        f'attachment; filename="{slugify(book.title)}-{extension}-{checksum}.zip"'
     )
     return response
 
@@ -144,7 +145,7 @@ def revision_download_ly(request, transcription_id, index):
         revision.lilypond_source.open("rb"),
         content_type="text/plain; charset=utf-8",
         as_attachment=False,
-        filename=f"{revision.transcription.id}_r{revision.index}.ly",
+        filename=f"{slugify(revision.transcription.title)}_r{revision.index}.ly",
     )
 
 
@@ -160,7 +161,7 @@ def revision_download_pdf(request, transcription_id, index):
         revision.pdf_file.open("rb"),
         content_type="application/pdf",
         as_attachment=False,
-        filename=f"{revision.transcription.id}_r{revision.index}.pdf",
+        filename=f"{slugify(revision.transcription.title)}_r{revision.index}.pdf",
     )
 
 
