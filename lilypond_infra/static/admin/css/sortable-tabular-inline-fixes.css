@@ -1,0 +1,16 @@
+fieldset.sortable table tr.form-row.has_original td.original p {
+    font-size: 0;
+    position: relative;
+    height: 2rem;
+    width: 1rem;
+    padding: 0;
+}
+
+.inline-group .tabular fieldset.sortable tr.has_original td {
+    vertical-align: middle;
+    padding: 10px;
+}
+
+fieldset.sortable .related-widget-wrapper {
+    margin-bottom: 0;
+}

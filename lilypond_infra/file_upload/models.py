@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import models, transaction
 from django.conf import settings
@@ -13,14 +14,47 @@ class Config(models.Model):
         return self.key
 
 
+class BookContents(models.Model):
+    book = models.ForeignKey("Book", on_delete=models.CASCADE)
+    transcription = models.ForeignKey("Transcription", on_delete=models.CASCADE)
+
+    order = models.PositiveIntegerField(default=0, db_index=True)
+
+    revision = models.ForeignKey(
+        "Revision", on_delete=models.CASCADE, blank=True, null=True
+    )
+
+    def __str__(self):
+        if self.revision:
+            return (
+                f"{self.transcription.title} (pinned to revision {self.revision.index})"
+            )
+        return self.transcription.title
+
+    class Meta:
+        ordering = ["order"]
+
+    def clean(self):
+        if self.revision_id and self.revision.transcription_id != self.transcription_id:
+            raise ValidationError(
+                {
+                    "revision": "Pinned revision must belong to the selected transcription."
+                }
+            )
+
+    def get_revision(self):
+        return self.revision or self.transcription.latest_revision()
+
+
 class Book(models.Model):
-    id = models.CharField(primary_key=True, max_length=48)
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=255)
 
     transcriptions = models.ManyToManyField(
         "Transcription",
         related_name="books",
         blank=True,
+        through=BookContents,
     )
 
     def __str__(self):
@@ -28,13 +62,16 @@ class Book(models.Model):
 
 
 class Transcription(models.Model):
-    id = models.CharField(primary_key=True, max_length=48)
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
 
     def latest_revision(self):
+        if hasattr(self, "prefetched_revisions"):
+            return self.prefetched_revisions[0] if self.prefetched_revisions else None
+
         return self.revisions.order_by("-index").first()
 
 
@@ -97,7 +134,17 @@ class Revision(models.Model):
             super().save(*args, **kwargs)
 
     def render_pdf(self):
-        result = render(self.lilypond_source.path, self.template_tag)
+        lilypond_options, _ = Config.objects.get_or_create(
+            key="LILYPOND_OPTIONS",
+            defaults={
+                "value": "-dcairo",
+                "desc": "CLI options to pass to LilyPond (you may wish to regen pdfs after changing this)",
+            },
+        )
+
+        result = render(
+            self.lilypond_source.path, self.template_tag, options=lilypond_options.value
+        )
 
         if not result.name.endswith(".pdf"):
             raise ValueError("render() did not return a PDF")

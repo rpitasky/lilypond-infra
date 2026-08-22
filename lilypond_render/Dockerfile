@@ -1,10 +1,8 @@
 FROM python:3.14-slim
 
 # extracted from lilypond binary
-RUN apt-get install -y --no-install-recommends \
-    git \
-    openssh-client \
-    build-essential \
+# then some git/ssh stuff, then gs (required by ly)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     guile-3.0-libs \
     libgc1 \
@@ -34,22 +32,15 @@ RUN apt-get install -y --no-install-recommends \
     libxdmcp6 \
     libunistring5 \
     libgmp10 \
+    git \
+    openssh-client \
+    build-essential \
+    ghostscript \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/local/share/fonts/custom-fonts/
 COPY ./lilypond_render/fonts/* /usr/local/share/fonts/custom-fonts/
 RUN fc-cache -fv
-
-# git + openssh-client: this service `git pull`s over ssh at runtime
-# build-essential: covers anything in uv.lock that needs to compile
-# NOTE: lilypond itself is NOT installed here -- it's bind-mounted in from
-# the host at runtime (see docker-compose.yml), since it's a static release
-# already installed on the host at /usr/local/lilypond.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    openssh-client \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN git config --global --add safe.directory /app/lilypond_render/raw-template
 

@@ -24,15 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = "runserver" in sys.argv
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") if not DEBUG else "django-insecure-k^!a0b+mqr1e7nb=lqo8c*rcw9j2ka8#a*_vg-xr+3dwps0q*2"
+SECRET_KEY = (
+    os.environ.get("DJANGO_SECRET_KEY")
+    if not DEBUG
+    else "django-insecure-k^!a0b+mqr1e7nb=lqo8c*rcw9j2ka8#a*_vg-xr+3dwps0q*2"
+)
 
 ALLOWED_HOSTS = ["lilypond.rpitasky.xyz"] if not DEBUG else ["127.0.0.1", "localhost"]
 if not DEBUG:
     CSRF_TRUSTED_ORIGINS = ["https://lilypond.rpitasky.xyz"]
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
-USE_X_FORWARDED_PORT = True
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    USE_X_FORWARDED_HOST = True
+    USE_X_FORWARDED_PORT = True
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    "adminsortable2",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -153,6 +158,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 STORAGES = {
     "default": {

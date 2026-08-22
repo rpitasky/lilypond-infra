@@ -13,9 +13,7 @@ def add_user_to_admin_group(sender, request, user, **kwargs):
     if (
         user.is_staff
         or user.is_superuser
-        or discord_bot.user_has_role(
-            user, discord_settings.LILYPOND_TEAM_LEAD_ROLE_ID
-        )
+        or discord_bot.user_has_role(user, discord_settings.LILYPOND_TEAM_LEAD_ROLE_ID)
         or discord_bot.user_has_role(user, discord_settings.ED_BOARD_ROLE_ID)
     ):
         user.groups.add(admin_group)

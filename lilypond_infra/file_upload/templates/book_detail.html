@@ -8,14 +8,12 @@
 </p>
 
 <h2>Transcriptions</h2>
-<ul>
-  {% for transcription in transcriptions %}
+<ol>
+  {% for content in contents %}
     <li>
-      <a href="{% url 'transcription_detail' transcription.id %}">
-        {{ transcription.title }}
-      </a>
+      <a href="{% url 'transcription_detail' content.transcription.id %}">{{ content.transcription.title }}</a> {% if content.revision %} (pinned to revision {{ content.revision_id }}){% endif %}
     </li>
   {% empty %}
     <li>No transcriptions yet.</li>
   {% endfor %}
-</ul>
+</ol>

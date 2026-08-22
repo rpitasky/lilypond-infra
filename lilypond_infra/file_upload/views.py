@@ -3,6 +3,7 @@ import zipfile
 from hashlib import sha256
 
 from django.core.exceptions import PermissionDenied
+from django.db.models import Prefetch
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -15,14 +16,17 @@ from .models import Book, Revision, Transcription
 @discord_role_required(discord_settings.COLLABORATOR_ROLE_ID)
 def book_detail(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
-    transcriptions = book.transcriptions.all()
+    contents = book.bookcontents_set.prefetch_related(
+        "transcription",
+        "revision",
+    )
     return render(
         request,
         "book_detail.html",
         {
             "user": request.user,
             "book": book,
-            "transcriptions": transcriptions,
+            "contents": contents,
         },
     )
 
@@ -30,12 +34,23 @@ def book_detail(request, book_id):
 def _book_download_zip(request, book_id, file_field, extension):
     book = get_object_or_404(Book, pk=book_id)
 
+    contents = book.bookcontents_set.prefetch_related(
+        "transcription",
+        "revision",
+        Prefetch(
+            "transcription__revisions",
+            queryset=Revision.objects.order_by("-index"),
+            to_attr="prefetched_revisions",
+        ),
+    )
+
     checksum_data = []
     excluded_files = []
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
-        for transcription in book.transcriptions.order_by("id").all():
-            revision = transcription.latest_revision()
+        for content in contents:
+            transcription = content.transcription
+            revision = content.get_revision()
 
             if revision is None:
                 checksum_data.append((transcription.title, None))
