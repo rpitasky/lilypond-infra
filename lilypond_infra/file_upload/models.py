@@ -138,7 +138,7 @@ class Revision(models.Model):
             key="LILYPOND_OPTIONS",
             defaults={
                 "value": "-dcairo",
-                "desc": "CLI options to pass to LilyPond (you may wish to regen pdfs after changing this)",
+                "description": "CLI options to pass to LilyPond (you may wish to regen pdfs after changing this)",
             },
         )
 
