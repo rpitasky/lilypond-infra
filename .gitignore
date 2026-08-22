@@ -12,6 +12,7 @@ wheels/
 # media
 db.sqlite3
 lilypond_infra/media/
+lilypond_infra/staticfiles/
 
 # dev
 .idea/
